@@ -1,0 +1,31 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.app-shell {
+    height: 100vh; /* fallback para navegadores viejos */
+    height: 100dvh; /* altura real del viewport, ajustada dinámicamente en móviles */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+    .app-shell > header,
+    .app-shell > footer {
+        flex-shrink: 0; /* header y footer nunca se encogen, ocupan su alto natural */
+    }
+
+.app-main {
+    flex: 1 1 auto; /* ocupa todo el espacio restante entre header y footer */
+    overflow-y: auto; /* si el contenido no cabe, scrollea SOLO esta zona */
+}

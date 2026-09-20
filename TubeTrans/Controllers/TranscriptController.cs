@@ -1,6 +1,6 @@
-﻿using Application.Services;
+﻿using Application.Exceptions;
+using Application.Services;
 using Application.ViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TubeTrans.Controllers
@@ -14,6 +14,7 @@ namespace TubeTrans.Controllers
             _transcriptService = transcriptService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View(new TranscriptRequestViewModel());
@@ -37,6 +38,14 @@ namespace TubeTrans.Controllers
                     VideoTitle = transcript.VideoTitle,
                     Text = transcript.Text,
                     HasError = false
+                };
+            }
+            catch (TranscriptNotAvailableException ex)
+            {
+                response = new TranscriptResponseViewModel
+                {
+                    HasError = true,
+                    ErrorMessage = ex.Message
                 };
             }
             catch (Exception)

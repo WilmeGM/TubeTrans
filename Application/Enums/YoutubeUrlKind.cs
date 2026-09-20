@@ -1,6 +1,6 @@
 ﻿namespace Application.Enums
 {
-    public enum YoutubeUrlKind
+    internal enum YoutubeUrlKind
     {
         NotYoutube,
         Shorts,

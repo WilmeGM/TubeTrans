@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Exceptions;
+using Application.Helpers;
 using Application.Models;
 using YoutubeExplode;
 using YoutubeExplode.Videos.ClosedCaptions;
@@ -45,8 +46,7 @@ namespace Application.Services
             var primaryTrack = await GetPrimaryCaptionTrackAsync(videoId);
             if (primaryTrack is null)
             {
-                throw new InvalidOperationException(
-                    "This video doesn't have any captions available.");
+                throw new TranscriptNotAvailableException("This video doesn't have any captions available.");
             }
 
             var video = await _youtubeClient.Videos.GetAsync(videoId);

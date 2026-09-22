@@ -1,6 +1,6 @@
 ﻿namespace Application.Exceptions
 {
-    public class TranscriptNotAvailableException : Exception
+    public class TranscriptNotAvailableException : TubeTransException
     {
         public TranscriptNotAvailableException (string message) : base(message) { }
     }

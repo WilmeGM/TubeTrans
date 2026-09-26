@@ -14,12 +14,12 @@ namespace TubeTrans
             builder.Services.AddScoped<YoutubeClient>();
             builder.Services.AddScoped<YoutubeTranscriptService>();
 
-            var app = builder.Build();
-
-            if (!app.Environment.IsProduction())
+            if (!builder.Environment.IsProduction())
             {
                 builder.WebHost.UseStaticWebAssets(); // required to simulate production env in launchSettings.json
             }
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

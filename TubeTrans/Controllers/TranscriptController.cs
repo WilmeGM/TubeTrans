@@ -8,10 +8,14 @@ namespace TubeTrans.Controllers
     public class TranscriptController : Controller
     {
         private readonly YoutubeTranscriptService _transcriptService;
+        private readonly ILogger<TranscriptController> _logger;
 
-        public TranscriptController(YoutubeTranscriptService transcriptService)
+        public TranscriptController(
+            YoutubeTranscriptService transcriptService,
+            ILogger<TranscriptController> logger)
         {
             _transcriptService = transcriptService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -33,6 +37,9 @@ namespace TubeTrans.Controllers
             try
             {
                 var transcript = await _transcriptService.GetTranscriptAsync(vm.Url);
+
+                _logger.LogInformation("Transcript successfully fetched for URL {Url}", vm.Url);
+
                 response = new TranscriptResponseViewModel
                 {
                     VideoTitle = transcript.VideoTitle,
@@ -42,14 +49,18 @@ namespace TubeTrans.Controllers
             }
             catch (TubeTransException ex)
             {
+                _logger.LogWarning(ex, "Known transcript error for URL {Url}", vm.Url);
+
                 response = new TranscriptResponseViewModel
                 {
                     HasError = true,
                     ErrorMessage = ex.Message
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Unexpected error fetching transcript for URL {Url}", vm.Url);
+
                 response = new TranscriptResponseViewModel
                 {
                     HasError = true,

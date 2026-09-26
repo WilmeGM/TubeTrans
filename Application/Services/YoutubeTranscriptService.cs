@@ -2,6 +2,8 @@
 using Application.Helpers;
 using Application.Models;
 using YoutubeExplode;
+using YoutubeExplode.Exceptions;
+using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.ClosedCaptions;
 
 namespace Application.Services
@@ -43,13 +45,24 @@ namespace Application.Services
         {
             var videoId = ExtractVideoId(videoUrl);
 
-            var primaryTrack = await GetPrimaryCaptionTrackAsync(videoId);
+            Video video;
+            ClosedCaptionTrackInfo? primaryTrack;
+
+            try
+            {
+                video = await _youtubeClient.Videos.GetAsync(videoId);
+                primaryTrack = await GetPrimaryCaptionTrackAsync(videoId);
+            }
+            catch (VideoUnavailableException)
+            {
+                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available.");
+            }
+
             if (primaryTrack is null)
             {
                 throw new TranscriptNotAvailableException("This video doesn't have any captions available.");
             }
 
-            var video = await _youtubeClient.Videos.GetAsync(videoId);
             var captionTrack = await _youtubeClient.Videos.ClosedCaptions.GetAsync(primaryTrack);
 
             var text = string.Join(" ",

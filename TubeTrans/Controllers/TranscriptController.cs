@@ -40,7 +40,7 @@ namespace TubeTrans.Controllers
                     HasError = false
                 };
             }
-            catch (TranscriptNotAvailableException ex)
+            catch (TubeTransException ex)
             {
                 response = new TranscriptResponseViewModel
                 {

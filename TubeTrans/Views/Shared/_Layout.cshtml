@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var appVersion = typeof(TubeTrans.Program).Assembly.GetName().Version!.ToString(3);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -36,7 +40,7 @@
     <footer class="border-top text-muted">
         <div class="container py-3 small d-flex flex-wrap justify-content-between align-items-center gap-2">
             <span>
-                &copy; 2026 - TubeTrans &middot;
+                &copy; 2026 - TubeTrans v.@appVersion &middot;
                 <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-danger text-decoration-none">Privacy</a>
             </span>
             <a href="https://github.com/WilmeGM" target="_blank" rel="noopener"

@@ -12,3 +12,9 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 - Typed domain errors for videos without captions or unavailable videos.
 - Structured logging for successful requests, known errors and unexpected failures.
 - Privacy policy page.
+
+## [1.0.1] - 2026-10-10
+
+### Added
+- Custom error page, shown when an unexpected error happens outside the transcript flow, without exposing any technical details.
+- Request duration (in milliseconds) in the log entry of each successful transcript request.

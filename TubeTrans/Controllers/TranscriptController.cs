@@ -2,6 +2,7 @@
 using Application.Services;
 using Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace TubeTrans.Controllers
 {
@@ -36,9 +37,11 @@ namespace TubeTrans.Controllers
 
             try
             {
+                var stopwatch = Stopwatch.StartNew();
                 var transcript = await _transcriptService.GetTranscriptAsync(vm.Url);
+                stopwatch.Stop();
 
-                _logger.LogInformation("Transcript successfully fetched for URL {Url}", vm.Url);
+                _logger.LogInformation("Transcript successfully fetched for URL {Url} in {ElapsedMilliseconds} ms", vm.Url, stopwatch.ElapsedMilliseconds);
 
                 response = new TranscriptResponseViewModel
                 {

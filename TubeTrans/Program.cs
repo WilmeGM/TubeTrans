@@ -14,7 +14,7 @@ namespace TubeTrans
             builder.Services.AddScoped<YoutubeClient>();
             builder.Services.AddScoped<YoutubeTranscriptService>();
 
-            if (!builder.Environment.IsProduction())
+            if (builder.Environment.IsProduction())
             {
                 builder.WebHost.UseStaticWebAssets(); // required to simulate production env in launchSettings.json
             }

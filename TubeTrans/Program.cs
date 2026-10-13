@@ -1,3 +1,4 @@
+using Application.Interfaces.Services;
 using Application.Services;
 using YoutubeExplode;
 
@@ -12,7 +13,7 @@ namespace TubeTrans
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<YoutubeClient>();
-            builder.Services.AddScoped<YoutubeTranscriptService>();
+            builder.Services.AddScoped<IYoutubeTranscriptService, YoutubeTranscriptService>();
 
             if (builder.Environment.IsProduction())
             {

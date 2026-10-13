@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using Application.Interfaces.Services;
 using Application.Services;
 using Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,11 @@ namespace TubeTrans.Controllers
 {
     public class TranscriptController : Controller
     {
-        private readonly YoutubeTranscriptService _transcriptService;
+        private readonly IYoutubeTranscriptService _transcriptService;
         private readonly ILogger<TranscriptController> _logger;
 
         public TranscriptController(
-            YoutubeTranscriptService transcriptService,
+            IYoutubeTranscriptService transcriptService,
             ILogger<TranscriptController> logger)
         {
             _transcriptService = transcriptService;

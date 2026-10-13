@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Helpers;
+using Application.Interfaces.Services;
 using Application.Models;
 using YoutubeExplode;
 using YoutubeExplode.Exceptions;
@@ -8,7 +9,7 @@ using YoutubeExplode.Videos.ClosedCaptions;
 
 namespace Application.Services
 {
-    public class YoutubeTranscriptService
+    public class YoutubeTranscriptService : IYoutubeTranscriptService
     {
         private readonly YoutubeClient _youtubeClient;
 

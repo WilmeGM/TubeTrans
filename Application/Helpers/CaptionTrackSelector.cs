@@ -2,7 +2,7 @@
 
 namespace Application.Helpers
 {
-    internal static class CaptionTrackSelector
+    public static class CaptionTrackSelector
     {
         public static ClosedCaptionTrackInfo? SelectPrimary(IReadOnlyList<ClosedCaptionTrackInfo> tracks)
         {

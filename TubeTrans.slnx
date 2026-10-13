@@ -3,5 +3,6 @@
     <File Path="Directory.Build.props" />
   </Folder>
   <Project Path="Application/Application.csproj" />
+  <Project Path="Tests/Tests.csproj" Id="f026917b-8691-4ade-bf27-0a906ef79271" />
   <Project Path="TubeTrans/TubeTrans.csproj" />
 </Solution>

@@ -3,6 +3,12 @@
 All notable changes to this project are documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
+## [1.0.4] - 2026-10-15
+
+### Added
+- Unit test project (xUnit) covering URL parsing, request validation, caption track selection and the transcript controller.
+- The controller now depends on the `IYoutubeTranscriptService` interface instead of the concrete service.
+
 ## [1.0.3] - 2026-10-14
 
 ### Changed

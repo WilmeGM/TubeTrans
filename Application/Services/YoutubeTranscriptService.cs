@@ -13,12 +13,9 @@ namespace Application.Services
     {
         private readonly YoutubeClient _youtubeClient;
 
-        public YoutubeTranscriptService(YoutubeClient youtubeClient)
-        {
-            _youtubeClient = youtubeClient;
-        }
+        public YoutubeTranscriptService(YoutubeClient youtubeClient) => _youtubeClient = youtubeClient;
 
-        public string ExtractVideoId(string videoUrl)
+        private string ExtractVideoId(string videoUrl)
         {
             var videoId = YoutubeUrlHelper.ExtractVideoId(videoUrl);
 
@@ -30,13 +27,13 @@ namespace Application.Services
             return videoId;
         }
 
-        public async Task<IReadOnlyList<ClosedCaptionTrackInfo>> GetAvailableCaptionTracksAsync(string videoId)
+        private async Task<IReadOnlyList<ClosedCaptionTrackInfo>> GetAvailableCaptionTracksAsync(string videoId)
         {
             var trackManifest = await _youtubeClient.Videos.ClosedCaptions.GetManifestAsync(videoId);
             return trackManifest.Tracks;
         }
 
-        public async Task<ClosedCaptionTrackInfo?> GetPrimaryCaptionTrackAsync(string videoId)
+        private async Task<ClosedCaptionTrackInfo?> GetPrimaryCaptionTrackAsync(string videoId)
         {
             var tracks = await GetAvailableCaptionTracksAsync(videoId);
             return CaptionTrackSelector.SelectPrimary(tracks);

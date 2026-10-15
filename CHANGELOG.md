@@ -3,6 +3,11 @@
 All notable changes to this project are documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
+## [1.0.3] - 2026-10-14
+
+### Changed
+- `YoutubeTranscriptService` now exposes only `GetTranscriptAsync`; its helper methods are private, keeping YoutubeExplode types out of the service's public surface.
+
 ## [1.0.2] - 2026-10-14
 
 ### Fixed

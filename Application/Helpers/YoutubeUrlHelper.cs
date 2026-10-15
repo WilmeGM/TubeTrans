@@ -6,7 +6,7 @@ namespace Application.Helpers
     public class YoutubeUrlHelper
     {
         private static readonly Regex VideoIdPattern = new(
-            @"^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})",
+            @"^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex ShortsIdPattern = new(

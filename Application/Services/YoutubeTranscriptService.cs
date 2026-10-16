@@ -13,8 +13,8 @@ namespace Application.Services
     /// Retrieves YouTube transcripts through YoutubeExplode.
     /// </summary>
     /// <remarks>
-    /// This is the only class in the application that talks to YoutubeExplode, so replacing that
-    /// library (for example, if YouTube blocks it) means changing this class and nothing else.
+    /// This is the only class that calls YoutubeExplode. Replacing the library means changing this class, 
+    /// plus the track type used by CaptionTrackSelector and the client registration in Program.
     /// <para>
     /// <see cref="GetTranscriptAsync(string)"/> is the single public entry point. It works in these steps:
     /// </para>

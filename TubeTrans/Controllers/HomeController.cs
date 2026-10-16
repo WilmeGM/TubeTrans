@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using TubeTrans.Models;
 
 namespace TubeTrans.Controllers
 {
@@ -21,7 +19,7 @@ namespace TubeTrans.Controllers
         /// <summary>
         /// Shows a generic error page.
         /// </summary>
-        /// <returns>The error page, with the identifier of the failed request.</returns>
+        /// <returns>The error page.</returns>
         /// <remarks>
         /// This is the target of the exception handler registered in <see cref="Program.Main(string[])"/>,
         /// which only runs outside Development. In Development, the framework's detailed exception page is used instead.
@@ -30,7 +28,7 @@ namespace TubeTrans.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }

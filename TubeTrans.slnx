@@ -2,7 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path="Directory.Build.props" />
   </Folder>
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Tests/Tests.csproj" Id="f026917b-8691-4ade-bf27-0a906ef79271" />
-  <Project Path="TubeTrans/TubeTrans.csproj" />
+  <Project Path="src/Application/Application.csproj" />
+  <Project Path="tests/Tests/Tests.csproj" Id="f026917b-8691-4ade-bf27-0a906ef79271" />
+  <Project Path="src/TubeTrans/TubeTrans.csproj" />
 </Solution>

@@ -7,22 +7,29 @@ This document explains how the code is organized and how a request flows through
 ## Solution structure
 
 ```text
-TubeTrans.sln
-├── Application/              Class library: everything that is not web-specific
-│   ├── Enums/                YoutubeUrlKind
-│   ├── Exceptions/           TubeTransException and its subclasses
-│   ├── Helpers/              YoutubeUrlHelper, CaptionTrackSelector (pure logic)
-│   ├── Interfaces/Services/  IYoutubeTranscriptService
-│   ├── Models/               VideoTranscript (domain model)
-│   ├── Services/             YoutubeTranscriptService
-│   └── ViewModels/           Request and response view models
-│       └── Validation/       YoutubeUrlAttribute
-├── TubeTrans/                Web project (ASP.NET Core MVC)
-│   ├── Controllers/          TranscriptController, HomeController
-│   ├── Views/                Transcript/Index, Home/Privacy, Home/Error, Shared/_Layout
-│   ├── wwwroot/              CSS, JS and client libraries (Bootstrap)
-│   └── Program.cs            Service registration and HTTP pipeline
-└── Tests/                    xUnit tests
+TubeTrans/
+├── src/
+│   ├── Application/              Class library: everything that is not web-specific
+│   │   ├── Enums/                YoutubeUrlKind
+│   │   ├── Exceptions/           TubeTransException and its subclasses
+│   │   ├── Helpers/              YoutubeUrlHelper, CaptionTrackSelector (pure logic)
+│   │   ├── Interfaces/Services/  IYoutubeTranscriptService
+│   │   ├── Models/               VideoTranscript (domain model)
+│   │   ├── Services/             YoutubeTranscriptService
+│   │   └── ViewModels/           Request and response view models
+│   │       └── Validation/       YoutubeUrlAttribute
+│   └── TubeTrans/                Web project (ASP.NET Core MVC)
+│       ├── Controllers/          TranscriptController, HomeController
+│       ├── Views/                Transcript/Index, Home/Privacy, Home/Error, Shared/_Layout
+│       ├── wwwroot/              CSS, JS and client libraries (Bootstrap)
+│       └── Program.cs            Service registration and HTTP pipeline
+├── tests/
+│   └── Tests/                    xUnit tests
+├── docs/                         SRS, architecture and decision records
+├── TubeTrans.slnx
+├── Directory.Build.props         Version shared by all projects
+├── CHANGELOG.md
+└── README.md
 ```
 
 | Piece | Responsibility |

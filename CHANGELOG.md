@@ -3,6 +3,21 @@
 All notable changes to this project are documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
+## [1.0.5] - 2026-10-18
+
+### Added
+- XML documentation for every public member, with documentation file generation enabled in both projects.
+- Architecture overview (`docs/architecture.md`) with diagrams, and seven architecture decision records (`docs/decisions/`).
+- Software requirements specification (`docs/SRS.md`), aligned with the implemented behavior.
+- README with instructions to run the app and the tests, and links to the documentation.
+
+### Changed
+- Solution restructured: application projects now live under `src/` and tests under `tests/`.
+- The error page no longer relies on a view model.
+
+### Removed
+- Unused `ErrorViewModel`.
+
 ## [1.0.4] - 2026-10-15
 
 ### Added

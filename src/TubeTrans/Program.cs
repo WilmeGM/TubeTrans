@@ -33,13 +33,13 @@ namespace TubeTrans
             builder.Services.AddScoped<YoutubeClient>();
             builder.Services.AddScoped<IYoutubeTranscriptService, YoutubeTranscriptService>();
 
-            // Static web assets are enabled automatically only in Development. When the app runs
-            // unpublished (dotnet run / F5) with the Production environment, they must be enabled by
-            // hand, otherwise MapStaticAssets cannot find the files and CSS/JS return 404.
-            // This is a workaround to simulate Production locally; a published deployment does not need it.
-            if (builder.Environment.IsProduction())
+            // Static web assets are enabled automatically only in Development. To simulate a production-like
+            // run locally (dotnet run / F5), the Staging environment enables them by hand; otherwise
+            // MapStaticAssets cannot find the files and CSS/JS return 404.
+            // A published deployment runs in Production and does not need this.
+            if (builder.Environment.IsStaging())
             {
-                builder.WebHost.UseStaticWebAssets(); // required to simulate production env in launchSettings.json
+                builder.WebHost.UseStaticWebAssets();
             }
 
             var app = builder.Build();

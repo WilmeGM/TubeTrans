@@ -109,7 +109,7 @@ Errors are handled at four levels. Only the messages of `TubeTransException` sub
 
 **Configuration and environments.** The environment comes from `ASPNETCORE_ENVIRONMENT`. `launchSettings.json` only applies to local development and is ignored in production. `appsettings.json` is merged with `appsettings.{Environment}.json`, and the environment-specific file wins on conflicts.
 
-**Static files.** Served with `MapStaticAssets` from `wwwroot`. Running unpublished in a non-Development environment needs a workaround, described in [ADR 0006](decisions/0006-static-web-assets-in-production.md).
+**Static files.** Served with `MapStaticAssets` from `wwwroot`. Running unpublished in a non-Development environment needs a workaround, which is applied only in the `Staging` environment used to simulate production locally ([ADR 0008](decisions/0008-simulate-production-with-staging.md)).
 
 ## Front end
 
@@ -134,7 +134,7 @@ dotnet test
 - **Track selection is a heuristic.** On videos with several caption tracks, the chosen one may not be the original language.
 - **Not supported:** YouTube Shorts and videos without captions.
 
-## Deployment notes (pending)
+## Deployment notes
 
-- Behind a reverse proxy that terminates TLS, `UseHttpsRedirection` can loop. Set `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` on the host.
-- Decide how to handle `UseStaticWebAssets` before the first deployment ([ADR 0006](decisions/0006-static-web-assets-in-production.md)).
+- The host must set `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` when it puts a proxy in front of the app, so the app sees the original scheme and client IP ([ADR 0009](decisions/0009-forwarded-headers-set-by-the-host.md)).
+- In a real deployment the environment is `Production`, and nothing extra is enabled for static assets ([ADR 0008](decisions/0008-simulate-production-with-staging.md)).

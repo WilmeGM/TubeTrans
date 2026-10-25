@@ -11,8 +11,10 @@ An architecture decision record (ADR) explains **why** a significant design choi
 | [0003](0003-typed-domain-exceptions.md) | Typed domain exceptions with user-facing messages | Accepted |
 | [0004](0004-heuristic-caption-track-selection.md) | Heuristic selection of the caption track | Accepted |
 | [0005](0005-stateless-no-persistence.md) | Stateless application with no persistence | Accepted |
-| [0006](0006-static-web-assets-in-production.md) | Enable static web assets to simulate Production locally | Accepted, to revisit |
+| [0006](0006-static-web-assets-in-production.md) | Enable static web assets to simulate Production locally | Superseded by 0008 |
 | [0007](0007-service-interface-and-test-scope.md) | Service behind an interface, and the scope of unit tests | Accepted |
+| [0008](0008-simulate-production-with-staging.md) | Simulate production locally with a Staging environment | Accepted |
+| [0009](0009-forwarded-headers-set-by-the-host.md) | Forwarded headers are enabled by the host, not by the code | Accepted |
 
 ## Format
 

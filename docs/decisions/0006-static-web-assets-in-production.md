@@ -1,6 +1,6 @@
 # 6. Enable static web assets to simulate Production locally
 
-- Status: Accepted, to revisit before the first deployment
+- Status: Superseded by [ADR 0008](0008-simulate-production-with-staging.md)
 - Date: 2026-10-16
 
 ## Context

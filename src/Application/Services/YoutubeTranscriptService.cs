@@ -91,9 +91,9 @@ namespace Application.Services
                 video = await _youtubeClient.Videos.GetAsync(videoId);
                 primaryTrack = await GetPrimaryCaptionTrackAsync(videoId);
             }
-            catch (VideoUnavailableException)
+            catch (VideoUnavailableException ex)
             {
-                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available.");
+                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available. Real message: " + ex.Message);
             }
 
             if (primaryTrack is null)

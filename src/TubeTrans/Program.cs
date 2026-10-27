@@ -77,7 +77,7 @@ namespace TubeTrans
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36");
                     http.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US,en;q=0.9");
 
-                    using var response = await http.GetAsync("https://www.youtube.com/watch?v=dQw4w9WgXcQ&hl=en");
+                    using var response = await http.GetAsync("https://youtu.be/gwN7vII-FEo?si=wjLGZKJajXhUzlet");
                     var html = await response.Content.ReadAsStringAsync();
 
                     var title = System.Text.RegularExpressions.Regex.Match(

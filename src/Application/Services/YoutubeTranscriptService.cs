@@ -93,7 +93,7 @@ namespace Application.Services
             }
             catch (VideoUnavailableException ex)
             {
-                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available. Real message: " + ex.Message);
+                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available.", ex);
             }
 
             if (primaryTrack is null)

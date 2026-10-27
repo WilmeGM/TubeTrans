@@ -13,7 +13,8 @@
         /// Initializes a new instance with a user-facing message.
         /// </summary>
         /// <param name="message">A message that is safe to display to the end user.</param>
-        public VideoNotFoundException(string message) : base(message)
+        /// <param name="innerException">The original exception, kept for diagnostics. It is logged but never shown to the user.</param>
+        public VideoNotFoundException(string message, Exception? innerException = null) : base(message, innerException)
         {
         }
     }

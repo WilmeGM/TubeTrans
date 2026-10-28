@@ -1,7 +1,8 @@
 ﻿namespace Application.Exceptions
 {
     /// <summary>
-    /// Thrown when the requested video does not exist, is private, or is no longer available.
+    /// Thrown when the video cannot be accessed: it does not exist, is private, is no longer available, or YouTube 
+    /// refuses to serve it to the server (for example, with a bot check).
     /// </summary>
     /// <remarks>
     /// The service translates <see cref="YoutubeExplode.Exceptions.VideoUnavailableException"/>

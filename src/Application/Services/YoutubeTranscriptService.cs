@@ -93,7 +93,7 @@ namespace Application.Services
             }
             catch (VideoUnavailableException ex)
             {
-                throw new VideoNotFoundException("This video doesn't exist, is private, or is no longer available.", ex);
+                throw new VideoNotFoundException("We couldn't access this video. It may not exist, may be private, or YouTube may be blocking requests from this server. Try another video or try again later.", ex);
             }
 
             if (primaryTrack is null)

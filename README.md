@@ -1,4 +1,5 @@
 # TubeTrans
+<img width="1916" height="952" alt="image" src="https://github.com/user-attachments/assets/0a142d50-3c3f-42af-bcbf-14c813c1acad" />
 
 Get the transcript of any public YouTube video, instantly: no sign-up, no ads, no tracking.
 

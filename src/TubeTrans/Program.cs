@@ -68,36 +68,6 @@ namespace TubeTrans
                 pattern: "{controller=Transcript}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
-            if (app.Configuration["ENABLE_YT_DIAG"] == "true")
-            {
-                app.MapGet("/diag/youtube", async () =>
-                {
-                    using var http = new HttpClient();
-                    http.DefaultRequestHeaders.UserAgent.ParseAdd(
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36");
-                    http.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US,en;q=0.9");
-
-                    using var response = await http.GetAsync("https://youtu.be/gwN7vII-FEo?si=wjLGZKJajXhUzlet");
-                    var html = await response.Content.ReadAsStringAsync();
-
-                    var title = System.Text.RegularExpressions.Regex.Match(
-                        html, "<title>(.*?)</title>", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
-                    var playability = System.Text.RegularExpressions.Regex.Match(
-                        html, @"""playabilityStatus"":\{""status"":""(\w+)""(?:,""reason"":""([^""]*)"")?");
-
-                    return Results.Json(new
-                    {
-                        status = (int)response.StatusCode,
-                        finalUrl = response.RequestMessage?.RequestUri?.ToString(),
-                        htmlLength = html.Length,
-                        title,
-                        hasOgUrl = html.Contains("property=\"og:url\""),
-                        playabilityStatus = playability.Groups[1].Value,
-                        playabilityReason = playability.Groups[2].Value
-                    });
-                });
-            }
-
             app.Run();
         }
     }

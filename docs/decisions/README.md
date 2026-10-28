@@ -15,6 +15,8 @@ An architecture decision record (ADR) explains **why** a significant design choi
 | [0007](0007-service-interface-and-test-scope.md) | Service behind an interface, and the scope of unit tests | Accepted |
 | [0008](0008-simulate-production-with-staging.md) | Simulate production locally with a Staging environment | Accepted |
 | [0009](0009-forwarded-headers-set-by-the-host.md) | Forwarded headers are enabled by the host, not by the code | Accepted |
+| [0010](0010-render-demo-with-known-limitation.md) | Keep the Render deployment as a demo with a known limitation | Accepted |
+| [0011](0011-distribute-image-on-docker-hub.md) | Distribute the application as an image on Docker Hub | Accepted |
 
 ## Format
 

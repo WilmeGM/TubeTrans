@@ -2,7 +2,7 @@
 
 ## Project: TubeTrans
 
-**Version:** 2.1
+**Version:** 2.2
 **Date:** October 2026
 **Project type:** Web application (ASP.NET Core MVC)
 **Author:** Wilme González Martínez
@@ -23,7 +23,7 @@ The application:
 - Retrieves the captions available for the video, in its original language (no translation).
 - Shows the result as a **single block of continuous plain text** (no timestamps and no visual division by caption line), with a button to copy it to the clipboard.
 - Requires no user account or login, and keeps no data between sessions or requests (no database and no persistence of any kind).
-- Can be deployed to an ASP.NET Core compatible hosting provider, on a free tier.
+- Can be deployed to an ASP.NET Core compatible hosting provider, on a free tier, and is distributed as a Docker image so that anyone can run it on their own machine.
 
 Explicitly out of scope:
 
@@ -65,6 +65,7 @@ A single, anonymous kind of user, with no technical knowledge required: anyone w
 - No paid API key and no registration process may be required, neither from the end user nor for the operation of the system.
 - The system must operate within the free limits of the external service used to obtain captions.
 - The system must be deployable on a free hosting plan.
+- Availability from cloud hosting providers is best-effort: YouTube may apply bot checks to requests that come from data-center IP addresses (see section 7).
 
 ### 2.5 Assumptions and dependencies
 
@@ -89,7 +90,7 @@ A single, anonymous kind of user, with no technical knowledge required: anyone w
 | RF-07.1 | The system must offer a button that copies the full content of the text block to the user's clipboard. | High |
 | RF-07.2 | The system must visually indicate to the user when the copy to the clipboard succeeded (for example, a change in the button's text or icon). | Low |
 | RF-08 | The system must clearly inform the user if the video has no captions available. | Medium |
-| RF-09 | The system must inform the user if the entered URL is not valid, or if the video does not exist or is not public. | Medium |
+| RF-09 | The system must inform the user if the entered URL is not valid, or if the video does not exist, is not public or cannot be accessed, including when YouTube refuses to serve it to the server. | Medium |
 | RF-10 | The system must inform the user if the external caption service is temporarily unavailable, without exposing internal technical details. | Medium |
 | RF-11 | The system must not store any transcript or keep any history of user activity. The submitted URL may appear in diagnostic logs, which never contain transcript content, and the privacy policy must say so. | High |
 
@@ -102,9 +103,10 @@ A single, anonymous kind of user, with no technical knowledge required: anyone w
 | RNF-03 | **Free of charge**: every external dependency (libraries, services, hosting) must operate within free tiers. |
 | RNF-04 | **Response time**: for a video of typical length (up to ~30 minutes), fetching and displaying the transcript should not take more than ~5 seconds under normal conditions. |
 | RNF-05 | **Robust error handling**: no unhandled exception may break the application or expose internal details (such as stack traces) to the end user in production. |
-| RNF-06 | **Portability**: the application must be deployable on any ASP.NET Core compatible provider without code changes. |
+| RNF-06 | **Portability**: the application must be deployable on any ASP.NET Core compatible provider, including as a container image, without code changes. |
 | RNF-07 | **Usability**: a simple interface built around a single form, with no need for additional instructions for the user. |
 | RNF-08 | **Client-side copying**: copying the text to the clipboard must be done in the browser (with no additional request to the server), using the browser's standard clipboard API, which requires a secure context (HTTPS or localhost). |
+| RNF-09 | **Container distribution**: the application must be published as a public container image, for the `linux/amd64` and `linux/arm64` architectures, that starts with a single command and needs no configuration. |
 
 ### 3.3 External interface requirements
 
@@ -142,49 +144,48 @@ A single, anonymous kind of user, with no technical knowledge required: anyone w
 
 - 3a. The URL is not a valid YouTube video link, or it points to a Short → the system shows a validation message under the field and does not process the request (RF-02).
 - 4a. The video has no captions available → the system shows an informative message (RF-08).
-- 4b. The video does not exist, is private or is no longer available → the system shows an error message (RF-09).
+- 4b. The video does not exist, is private, is no longer available, or YouTube refuses to serve it → the system shows an error message (RF-09).
 - 4c. The external service fails or does not respond → the system shows a generic error message (RF-10).
 
 ---
 
 ## 5. Proposed Technology Stack
 
-- **Framework:** ASP.NET Core MVC (.NET 9 or later)
+- **Framework:** ASP.NET Core MVC (.NET 10)
 - **Language:** C#
 - **Libraries:**
   - `YoutubeExplode`: extraction of metadata and captions
 - **Front end:** Razor views and Bootstrap 5
 - **Testing:** xUnit
-- **Suggested hosting:** any provider with a free tier compatible with ASP.NET Core
+- **Packaging:** Docker, with a multi-architecture image published on Docker Hub
+- **Demo hosting:** Render, free tier, running the container
 
 ---
 
 ## 6. Deployment Plan (summary)
 
-1. Publish the project to the chosen hosting provider.
-2. Configure the environment variables needed for production, including `ASPNETCORE_ENVIRONMENT=Production`. If the provider sits behind a reverse proxy that terminates TLS, also set `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`.
-3. Verify that the provider allows outbound HTTP traffic to external services (needed to fetch captions).
-4. Validate the behavior with real videos after deployment, confirming acceptable response times and correct error handling.
+1. Build the container image from the `Dockerfile` in the repository.
+2. **Demo on Render:** create a Docker web service linked to the repository, tracking `master`, and set `ASPNETCORE_ENVIRONMENT=Production`, `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` and `PORT=8080`, with `/` as the health check path. Every push to `master` redeploys it.
+3. **Docker Hub:** for every release, build the image for `linux/amd64` and `linux/arm64` and push it with the version tag and `latest`.
+4. Validate the behavior with real videos after each release, confirming acceptable response times and correct error handling.
 
-Deployment details still pending are listed in [Architecture](architecture.md#deployment-notes-pending).
+The deployment decisions are recorded in [ADR 0010](decisions/0010-render-demo-with-known-limitation.md) and [ADR 0011](decisions/0011-distribute-image-on-docker-hub.md). Operational notes are in [Architecture](architecture.md#deployment).
 
 ---
 
 ## 7. Risks
 
-| Risk | Impact | Mitigation |
-|---|---|---|
-| YouTube changes or restricts the internal mechanism the extraction library relies on (there is no official general-purpose API) | High: the main feature could stop working without notice | Robust error handling (RF-10). The dependency is isolated in a single service, which makes it easy to replace without affecting the rest of the system ([ADR 0001](decisions/0001-use-youtubeexplode.md)) |
-| YouTube rate-limits requests coming from the server's IP address when there are many in a short time | Medium: lookups fail temporarily | A generic, friendly message for the user, and the full error in the logs. A short-lived in-memory cache is a possible future mitigation |
-| The video has no captions in any language | Low | Clear informative message to the user (RF-08) |
-| On videos with several caption tracks, the automatically selected one is not the original language | Low | The selection rules are documented and tested ([ADR 0004](decisions/0004-heuristic-caption-track-selection.md)). Manual selection is a possible future improvement |
-| Very long videos produce long blocks of text, affecting the load time of the page or the reading experience | Medium | The text is shown in a fixed-height block with internal scrolling |
+| Risk                                                                                                                            | Impact                                                                       | Mitigation                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| YouTube changes or restricts the internal mechanism the extraction library relies on (there is no official general-purpose API) | High: the main feature could stop working without notice                     | Robust error handling (RF-10). The dependency is isolated in a single service, which makes it easy to replace without affecting the rest of the system ([ADR 0001](decisions/0001-use-youtubeexplode.md))                                                                                                            |
+| YouTube applies bot checks and rate limits to requests coming from data-center IP addresses, such as those of a cloud host      | High: **materialized** on the Render demo, which works only with some videos | The error message explains it. The application is distributed as a Docker image to run from the user's own connection ([ADR 0010](decisions/0010-render-demo-with-known-limitation.md), [ADR 0011](decisions/0011-distribute-image-on-docker-hub.md)). A short-lived in-memory cache is a possible future mitigation |
+| The video has no captions in any language                                                                                       | Low                                                                          | Clear informative message to the user (RF-08)                                                                                                                                                                                                                                                                        |
+| On videos with several caption tracks, the automatically selected one is not the original language                              | High                                                                         | The selection rules are documented and tested ([ADR 0004](decisions/0004-heuristic-caption-track-selection.md)). Manual selection is a possible future improvement                                                                                                                                                   |
+| Very long videos produce long blocks of text, affecting the load time of the page or the reading experience                     | Low                                                                          | The text is shown in a fixed-height block with internal scrolling                                                                                                                                                                                                                                                    |
 
 ---
 
 ## 8. Future Improvements (outside the current scope)
 
 - Manual selection of the caption language when the video offers more than one track.
-- Support for YouTube Shorts links.
 - Export of the transcript to a text file or `.srt` format.
-- Text search within the displayed transcript.

@@ -3,6 +3,19 @@
 All notable changes to this project are documented in this file.
 The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
+## [1.1.0] - 2026-10-27
+
+### Added
+- `Dockerfile` and `.dockerignore` to build a container image that runs on `linux/amd64` and `linux/arm64`.
+- Public Docker image on Docker Hub (`wilmegm/tubetrans`), with run instructions in the README.
+- Demo deployment on Render (free tier).
+- Decision records 0008 to 0011: Staging environment for local production simulation, forwarded headers, the Render demo and its limitation, and Docker Hub distribution.
+
+### Changed
+- When a video cannot be accessed, the message no longer claims it does not exist: it also covers YouTube refusing to serve it to the server. The original exception is now kept in the logs.
+- `UseStaticWebAssets` now runs in the `Staging` environment instead of `Production`.
+- README, SRS and architecture documentation updated, with the known limitation of cloud hosting stated at the top of the README.
+
 ## [1.0.5] - 2026-10-18
 
 ### Added

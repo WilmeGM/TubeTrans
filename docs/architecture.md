@@ -1,6 +1,6 @@
 # Architecture
 
-TubeTrans is a server-rendered ASP.NET Core MVC application that turns a YouTube video link into the plain-text transcript of that video, in its original language. It has no database and no accounts, and it keeps nothing between requests.
+TubeTrans is a server-rendered ASP.NET Core MVC application that turns a YouTube video link into the plain-text transcript of that video. It has no database and no accounts, and it keeps nothing between requests.
 
 This document explains how the code is organized and how a request flows through it. The reasons behind the main design choices are recorded separately, as [decision records](decisions/README.md).
 
@@ -26,6 +26,8 @@ TubeTrans/
 ├── tests/
 │   └── Tests/                    xUnit tests
 ├── docs/                         SRS, architecture and decision records
+├── Dockerfile                    Container image of the web app
+├── .dockerignore
 ├── TubeTrans.slnx
 ├── Directory.Build.props         Version shared by all projects
 ├── CHANGELOG.md
@@ -129,12 +131,20 @@ dotnet test
 
 ## Known limitations
 
-- **Rate limiting.** YouTube may temporarily block requests from the server's IP when there are many in a short time. The user gets a generic message and the error is logged.
+- **Requests from data-center IPs are often blocked.** YouTube may require a bot check, or temporarily rate-limit requests, when they come from a cloud host's IP address. The Render demo works only with some videos. The user sees a message that says the video could not be accessed, and the original error is logged ([ADR 0010](decisions/0010-render-demo-with-known-limitation.md)).
 - **Unofficial access.** YoutubeExplode is not an official API. YouTube can change or block it without notice ([ADR 0001](decisions/0001-use-youtubeexplode.md)).
 - **Track selection is a heuristic.** On videos with several caption tracks, the chosen one may not be the original language.
 - **Not supported:** YouTube Shorts and videos without captions.
 
-## Deployment notes
+## Deployment
 
-- The host must set `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` when it puts a proxy in front of the app, so the app sees the original scheme and client IP ([ADR 0009](decisions/0009-forwarded-headers-set-by-the-host.md)).
+The application is packaged as a container image with the `Dockerfile` at the repository root. The build stage runs natively on the build machine and publishes portable output, and the final stage uses the official ASP.NET runtime image, so the same build runs on `linux/amd64` and `linux/arm64`. The container runs as a non-root user and listens on port 8080.
+
+| Target | How |
+|---|---|
+| **Render (demo)** | Docker web service tracking `master`, redeployed on every push. Environment variables: `ASPNETCORE_ENVIRONMENT=Production`, `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`, `PORT=8080`. Health check path: `/` |
+| **Docker Hub (recommended way to run it)** | Public image `wilmegm/tubetrans`, tagged with each version and with `latest` ([ADR 0011](decisions/0011-distribute-image-on-docker-hub.md)) |
+
+- The host must set `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` when it puts a proxy in front of the app, so the app sees the original scheme and client IP ([ADR 0009](decisions/0009-forwarded-headers-set-by-the-host.md)). It is not needed when running the container directly.
 - In a real deployment the environment is `Production`, and nothing extra is enabled for static assets ([ADR 0008](decisions/0008-simulate-production-with-staging.md)).
+- The free Render tier puts the service to sleep after a period without traffic, so the first request can take around a minute.
